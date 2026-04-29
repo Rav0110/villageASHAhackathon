@@ -97,3 +97,12 @@ export async function markAllLocalSynced(): Promise<void> {
   ]);
 }
 
+export async function clearAllLocalData(): Promise<void> {
+  // Clear only demo-local offline-first data (patients, visits, alerts).
+  await Promise.all([
+    AsyncStorage.removeItem(KEYS.patients),
+    AsyncStorage.removeItem(KEYS.visits),
+    AsyncStorage.removeItem(KEYS.alerts),
+  ]);
+}
+

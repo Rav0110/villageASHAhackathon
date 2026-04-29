@@ -71,6 +71,12 @@ npm run android
 ```
 The mobile app sync base URL is `http://10.0.2.2:3000` (Android emulator localhost mapping).
 
+Notes:
+- Android emulator uses `http://10.0.2.2:3000`.
+- `GET /api/visits` endpoint exists.
+- Physical phone on the same Wi-Fi must use your laptop IP, for example `http://192.168.x.x:3000`.
+- `Reset Demo Data` clears local patients, visits, and alerts.
+
 ## API Endpoints
 Backend Base URL:
 `http://10.0.2.2:3000`
@@ -87,7 +93,8 @@ Backend Base URL:
      ```
 3. `GET /api/patients`
 4. `GET /api/alerts`
-5. `GET /api/reports/summary`
+5. `GET /api/visits`
+6. `GET /api/reports/summary`
    - Returns:
      - `totalPatients`
      - `pregnantPatients`

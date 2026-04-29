@@ -9,11 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/health", (_req, res) => {
+app.get("/health", (_req: any, res: any) => {
   res.json({ ok: true });
 });
 
-app.post("/api/sync", (req, res) => {
+app.post("/api/sync", (req: any, res: any) => {
   const payload = req.body as Partial<SyncPayload>;
 
   if (!payload || !Array.isArray(payload.patients) || !Array.isArray(payload.visits) || !Array.isArray(payload.alerts)) {
@@ -37,17 +37,22 @@ app.post("/api/sync", (req, res) => {
   res.json({ ok: true, ...result, alertsRegenerated: regenerated.length });
 });
 
-app.get("/api/patients", (_req, res) => {
+app.get("/api/patients", (_req: any, res: any) => {
   const db = readDb();
   res.json(db.patients);
 });
 
-app.get("/api/alerts", (_req, res) => {
+app.get("/api/alerts", (_req: any, res: any) => {
   const db = readDb();
   res.json(db.alerts);
 });
 
-app.get("/api/reports/summary", (_req, res) => {
+app.get("/api/visits", (_req: any, res: any) => {
+  const db = readDb();
+  res.json(db.visits);
+});
+
+app.get("/api/reports/summary", (_req: any, res: any) => {
   const db = readDb();
   const summary = computeReportSummary(db.patients);
   res.json(summary);

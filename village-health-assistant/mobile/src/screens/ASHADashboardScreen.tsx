@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, Button } from "react-native";
+import { View, Text, Button, Alert } from "react-native";
+import { clearAllLocalData } from "../storage";
 
 export default function ASHADashboardScreen(props: {
   onNavigate: (screen: string) => void;
@@ -9,6 +10,13 @@ export default function ASHADashboardScreen(props: {
       <Text style={{ fontSize: 18, fontWeight: "700" }}>
         ASHA Dashboard
       </Text>
+      <Button
+        title="Reset Demo Data"
+        onPress={async () => {
+          await clearAllLocalData();
+          Alert.alert("Done", "Local demo data cleared.");
+        }}
+      />
       <Button title="Add Patient" onPress={() => props.onNavigate("addPatient")} />
       <Button title="Record Visit" onPress={() => props.onNavigate("visit")} />
       <Button title="Risk Alerts" onPress={() => props.onNavigate("riskAlerts")} />

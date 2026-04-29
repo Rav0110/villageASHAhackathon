@@ -2,6 +2,7 @@
 // Install real `@types/node` in a full project.
 
 declare const __dirname: string;
+declare const process: { env: Record<string, string | undefined> };
 
 declare module "fs" {
   export function existsSync(path: string): boolean;
