@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Expo / React Native caches
+.expo/
+**/.expo/
+
+# Build outputs
+dist/
+**/dist/
+build/
+**/build/
+
+# Logs
+*.log
+**/*.log
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Lockfiles (keep the repo small for hackathon demos)
+package-lock.json
+**/package-lock.json
+

@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "lib": ["es2017"],
+    "lib": [
+      "es2017"
+    ],
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "jsx": "react",
     "strict": true,
     "skipLibCheck": true,
@@ -13,6 +15,9 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "extends": "expo/tsconfig.base"
 }
-
