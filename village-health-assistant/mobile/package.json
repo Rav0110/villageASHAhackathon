@@ -15,7 +15,9 @@
     "expo": "*",
     "expo-clipboard": "*",
     "react": "*",
-    "react-native": "*"
+    "react-dom": "19.2.0",
+    "react-native": "*",
+    "react-native-web": "^0.21.0"
   },
   "devDependencies": {
     "typescript": "*"

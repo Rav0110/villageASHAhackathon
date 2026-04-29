@@ -8,17 +8,12 @@ import {
   saveVisits,
 } from "./storage";
 
-// Android emulator:
-// const BACKEND_BASE_URL = "http://10.0.2.2:3000";
-
-// Physical phone on same Wi-Fi:
-// const BACKEND_BASE_URL = "http://YOUR_LAPTOP_IP:3000";
-
-// Web/browser:
-// const BACKEND_BASE_URL = "http://localhost:3000";
-
-// Use Android emulator as default:
-const BACKEND_BASE_URL = "http://10.0.2.2:3000";
+// ─── BACKEND URL CONFIGURATION ───────────────────────────────────
+// Android Emulator:   http://10.0.2.2:3000
+// iOS Simulator:      http://localhost:3000
+// Physical device:    http://<YOUR_LAPTOP_IP>:3000
+// ──────────────────────────────────────────────────────────────────
+const BACKEND_BASE_URL = "http://10.0.2.2:3000"; // Change this before demo
 
 export function getBackendBaseUrl() {
   return BACKEND_BASE_URL;

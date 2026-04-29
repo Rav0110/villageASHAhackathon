@@ -1,27 +1,153 @@
-import React from "react";
-import { View, Text, Button, Alert } from "react-native";
-import { clearAllLocalData } from "../storage";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { countUnsyncedLocalData, loadAlerts, loadPatients } from "../storage";
+import type { ScreenKey } from "../../App";
 
 export default function ASHADashboardScreen(props: {
-  onNavigate: (screen: string) => void;
+  onNavigate: (screen: ScreenKey) => void;
+  refreshKey?: number;
 }) {
+  const [patientCount, setPatientCount] = useState<number>(0);
+  const [alertCount, setAlertCount] = useState<number>(0);
+  const [unsyncedCount, setUnsyncedCount] = useState<number>(0);
+
+  useEffect(() => {
+    let mounted = true;
+    Promise.all([loadPatients(), loadAlerts(), countUnsyncedLocalData()])
+      .then(([patients, alerts, c]) => {
+        if (!mounted) return;
+        setPatientCount(patients.length);
+        setAlertCount(alerts.length);
+        setUnsyncedCount(c.total);
+      })
+      .catch(() => {
+        // Keep dashboard functional even if AsyncStorage read fails.
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [props.refreshKey]);
+
   return (
-    <View style={{ gap: 12 }}>
-      <Text style={{ fontSize: 18, fontWeight: "700" }}>
+    <View style={{ flex: 1, backgroundColor: "#f5f6fa", padding: 16 }}>
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: "700",
+          color: "#1a5276",
+          marginBottom: 12,
+        }}
+      >
         ASHA Dashboard
       </Text>
-      <Button
-        title="Reset Demo Data"
-        onPress={async () => {
-          await clearAllLocalData();
-          Alert.alert("Done", "Local demo data cleared.");
+
+      <View
+        style={{
+          borderWidth: 1,
+          borderColor: "#ddd",
+          borderRadius: 8,
+          padding: 12,
+          backgroundColor: "#f8f9fa",
+          marginBottom: 12,
         }}
-      />
-      <Button title="Add Patient" onPress={() => props.onNavigate("addPatient")} />
-      <Button title="Record Visit" onPress={() => props.onNavigate("visit")} />
-      <Button title="Risk Alerts" onPress={() => props.onNavigate("riskAlerts")} />
-      <Button title="Sync Data" onPress={() => props.onNavigate("sync")} />
-      <Button title="Generate Report" onPress={() => props.onNavigate("report")} />
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={{ color: "#333", fontWeight: "600" }}>
+            Patients: {patientCount}{" "}
+          </Text>
+          <Text style={{ color: "#333", fontWeight: "600" }}>
+            Alerts: {alertCount}
+          </Text>
+        </View>
+        <Text style={{ color: "#333", marginTop: 6, fontWeight: "600" }}>
+          Unsynced records: {unsyncedCount}
+        </Text>
+      </View>
+
+      <TouchableOpacity
+        onPress={() => props.onNavigate("addPatient")}
+        style={{
+          backgroundColor: "#fff",
+          borderWidth: 1,
+          borderColor: "#2980b9",
+          borderRadius: 8,
+          padding: 14,
+          marginVertical: 4,
+        }}
+      >
+        <Text style={{ color: "#2980b9", fontWeight: "600", fontSize: 15 }}>
+          Add Patient
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => props.onNavigate("visit")}
+        style={{
+          backgroundColor: "#fff",
+          borderWidth: 1,
+          borderColor: "#2980b9",
+          borderRadius: 8,
+          padding: 14,
+          marginVertical: 4,
+        }}
+      >
+        <Text style={{ color: "#2980b9", fontWeight: "600", fontSize: 15 }}>
+          Record Visit
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => props.onNavigate("riskAlerts")}
+        style={{
+          backgroundColor: "#fff",
+          borderWidth: 1,
+          borderColor: "#2980b9",
+          borderRadius: 8,
+          padding: 14,
+          marginVertical: 4,
+        }}
+      >
+        <Text style={{ color: "#2980b9", fontWeight: "600", fontSize: 15 }}>
+          Risk Alerts
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => props.onNavigate("sync")}
+        style={{
+          backgroundColor: "#fff",
+          borderWidth: 1,
+          borderColor: "#2980b9",
+          borderRadius: 8,
+          padding: 14,
+          marginVertical: 4,
+        }}
+      >
+        <Text style={{ color: "#2980b9", fontWeight: "600", fontSize: 15 }}>
+          Sync Data
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => props.onNavigate("report")}
+        style={{
+          backgroundColor: "#fff",
+          borderWidth: 1,
+          borderColor: "#2980b9",
+          borderRadius: 8,
+          padding: 14,
+          marginVertical: 4,
+        }}
+      >
+        <Text style={{ color: "#2980b9", fontWeight: "600", fontSize: 15 }}>
+          Generate Report
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

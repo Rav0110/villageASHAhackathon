@@ -1,64 +1,194 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Button, ScrollView } from "react-native";
-import * as Clipboard from "expo-clipboard";
-import type { Patient } from "../types";
+import { View, Text, ScrollView, TouchableOpacity, Share } from "react-native";
+import type { Patient, ReportSummary } from "../types";
 import { loadPatients } from "../storage";
 import {
   generateGovernmentReportJson,
   generateGovernmentReportText,
 } from "../reportService";
+import type { ScreenKey } from "../../App";
 
 export default function ReportScreen(props: {
-  onNavigate: (screen: string) => void;
+  onNavigate: (screen: ScreenKey) => void;
   onBack: () => void;
 }) {
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [reportText, setReportText] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
+  const [summary, setSummary] = useState<ReportSummary | null>(null);
 
   useEffect(() => {
     loadPatients().then((p) => {
       setPatients(p);
-      setReportText(generateGovernmentReportText(p));
+      const json = generateGovernmentReportJson(p);
+      setSummary(json.summary);
     });
   }, []);
 
-  async function copyReport() {
-    if (!reportText) return;
-    await Clipboard.setStringAsync(reportText);
-    setStatus("Report copied.");
-  }
+  const generatedDate = new Date().toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 
-  async function exportJson() {
-    const json = JSON.stringify(generateGovernmentReportJson(patients), null, 2);
-    await Clipboard.setStringAsync(json);
-    setStatus("JSON exported (copied to clipboard).");
+  async function onShare() {
+    if (!patients.length) return;
+    await Share.share({
+      message: generateGovernmentReportText(patients),
+    });
   }
 
   return (
-    <ScrollView contentContainerStyle={{ gap: 12, paddingBottom: 32 }}>
-      <Text style={{ fontSize: 18, fontWeight: "700" }}>Government Report</Text>
+    <ScrollView
+      style={{ backgroundColor: "#f5f6fa" }}
+      contentContainerStyle={{ gap: 12, padding: 16, paddingBottom: 32 }}
+    >
+      <Text
+        style={{
+          fontSize: 20,
+          fontWeight: "700",
+          color: "#1a5276",
+          marginBottom: 12,
+        }}
+      >
+        Government Report
+      </Text>
 
-      {reportText ? (
+      {summary ? (
         <View
           style={{
             borderWidth: 1,
             borderColor: "#ddd",
-            padding: 12,
             borderRadius: 8,
+            overflow: "hidden",
+            backgroundColor: "#fff",
           }}
         >
-          <Text style={{ fontFamily: "monospace" }}>{reportText}</Text>
+          <View
+            style={{
+              backgroundColor: "#1a5276",
+              padding: 12,
+            }}
+          >
+            <Text
+              style={{
+                color: "#fff",
+                fontWeight: "700",
+                fontSize: 14,
+              }}
+            >
+              GOVERNMENT HEALTH SUMMARY REPORT
+            </Text>
+            <Text style={{ color: "#fff", marginTop: 4, fontSize: 12 }}>
+              Generated: {generatedDate}
+            </Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingVertical: 10,
+              borderBottomWidth: 1,
+              borderBottomColor: "#eee",
+              paddingHorizontal: 12,
+            }}
+          >
+            <Text style={{ fontWeight: "600" }}>Total Patients Registered:</Text>
+            <Text>{summary.totalPatients}</Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingVertical: 10,
+              borderBottomWidth: 1,
+              borderBottomColor: "#eee",
+              paddingHorizontal: 12,
+            }}
+          >
+            <Text style={{ fontWeight: "600" }}>Pregnant Patients:</Text>
+            <Text>{summary.pregnantPatients}</Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingVertical: 10,
+              borderBottomWidth: 1,
+              borderBottomColor: "#eee",
+              paddingHorizontal: 12,
+            }}
+          >
+            <Text style={{ fontWeight: "600" }}>
+              High-Risk Pregnancy Cases:
+            </Text>
+            <Text>{summary.highRiskPregnancyCases}</Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingVertical: 10,
+              borderBottomWidth: 1,
+              borderBottomColor: "#eee",
+              paddingHorizontal: 12,
+            }}
+          >
+            <Text style={{ fontWeight: "600" }}>TB Suspected Cases:</Text>
+            <Text>{summary.tbSuspectedCases}</Text>
+          </View>
+
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingVertical: 10,
+              paddingHorizontal: 12,
+            }}
+          >
+            <Text style={{ fontWeight: "600" }}>
+              Vaccination Pending / Missed:
+            </Text>
+            <Text>{summary.vaccinationPendingCases}</Text>
+          </View>
         </View>
       ) : (
         <Text>No patients found.</Text>
       )}
 
-      {status ? <Text>{status}</Text> : null}
+      <TouchableOpacity
+        onPress={onShare}
+        style={{
+          backgroundColor: "#2980b9",
+          padding: 14,
+          borderRadius: 8,
+          alignItems: "center",
+          width: "100%",
+          marginTop: 4,
+        }}
+      >
+        <Text style={{ color: "#fff", fontWeight: "700" }}>
+          Share / Export Report
+        </Text>
+      </TouchableOpacity>
 
-      <Button title="Copy report" onPress={copyReport} />
-      <Button title="Export JSON" onPress={exportJson} />
-      <Button title="Back" onPress={props.onBack} />
+      <TouchableOpacity
+        onPress={props.onBack}
+        style={{ alignSelf: "flex-start", marginTop: 8 }}
+      >
+        <Text
+          style={{
+            color: "#2980b9",
+            fontSize: 14,
+            marginTop: 8,
+            alignSelf: "flex-start",
+          }}
+        >
+          ← Back
+        </Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
