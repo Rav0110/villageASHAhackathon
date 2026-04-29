@@ -1,0 +1,22 @@
+{
+  "name": "village-health-assistant-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "ts-node src/index.ts",
+    "start": "ts-node src/index.ts"
+  },
+  "dependencies": {
+    "cors": "*",
+    "express": "*"
+  },
+  "devDependencies": {
+    "@types/cors": "*",
+    "@types/express": "*",
+    "@types/node": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+}

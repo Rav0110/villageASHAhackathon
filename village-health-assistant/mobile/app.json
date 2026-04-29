@@ -1,0 +1,16 @@
+{
+  "expo": {
+    "name": "Village Health Assistant",
+    "slug": "village-health-assistant",
+    "version": "1.0.0",
+    "platforms": ["android", "ios", "web"],
+    "android": {
+      "package": "com.villagehealthassistant.mobile"
+    },
+    "ios": {
+      "bundleIdentifier": "com.villagehealthassistant.mobile"
+    },
+    "jsEngine": "hermes"
+  }
+}
+
